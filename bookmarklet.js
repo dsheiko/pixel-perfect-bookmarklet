@@ -399,6 +399,9 @@
 				};
 			};
 
+	if ( typeof window.localStorage === "undefined" || typeof FileReader === "undefined" ){
+		alert( "Sorry, cannot do it - your browser is too old" );
+	}
 	loadHtml(function( container ){
 		( new Main( container ) ).init();
 		( new DragAndDrop( container ) ).init();
