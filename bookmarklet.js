@@ -41,7 +41,7 @@
 				node = document.createElement( "div" );
 				node.id = "pixel-perfect-container";
 				node.innerHTML = '' +
-'	<link rel="stylesheet" type="text/css" href="http://dsheiko.github.io/pixel-perfect-bookmarklet/style.css">' +
+'	<link rel="stylesheet" type="text/css" href="https://dsheiko.github.io/pixel-perfect-bookmarklet/style.css">' +
 '		<div class="pixel-perfect-panel" draggable="true">' +
 '		<div>' +
 '			<a class="pixel-perfect-panel-close">Close</a>' +
@@ -64,7 +64,7 @@
 '				</form>' +
 '			</div>' +
 '			<div class="pixel-perfect-panel-footer" draggable="true">' +
-'				<a href="http://dsheiko.github.io/pixel-perfect-bookmarklet/">Pixel Perfect Bookmarklet</a>' +
+'				<a href="https://dsheiko.github.io/pixel-perfect-bookmarklet/">Pixel Perfect Bookmarklet</a>' +
 '			</div>' +
 '		</div>' +
 '	</div>' +
