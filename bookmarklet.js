@@ -222,9 +222,10 @@
 						var left = e.screenX - transferObjOnStartState.left,
 								top = e.screenY - transferObjOnStartState.top;
 
-						left = left > 0 ? ( left < window.innerWidth - 200 ? left : window.innerWidth - 200 ) : 0;
-						top = top > 0 ? ( top < window.innerHeight - 240 ? top : window.innerHeight - 240 ) : 0;
+						left = left > 0 ? left : 0;
+						top = top > 0 ? top : 0;
 
+console.log(left, top);
 						main.updateOverlayPositionInForm( left, top );
 						main.syncUi();
 					}
