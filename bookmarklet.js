@@ -38,21 +38,39 @@
 			 * @returns {void}
 			 */
 			loadHtml = function( doneCb ){
-		    var oReq = new window.XMLHttpRequest();
-        oReq.onload = function() {
-					var node;
-          if ( this.readyState !== 4 || this.status !== 200 ) {
-            alert( "PixelPerfectBookmarklet: cannot read markup.html" );
-          }
-					node = document.createElement( "div" );
-					node.id = "pixel-perfect-container";
-					node.innerHTML = this.responseText;
-					document.body.appendChild( node );
-          doneCb( node );
-        };
-        oReq.open( "GET", "http://dsheiko.github.io/pixel-perfect-bookmarklet/markup.html", true );
-        oReq.setRequestHeader( "Content-Type", "application/x-www-form-urlencoded" );
-        oReq.send( null );
+				node = document.createElement( "div" );
+				node.id = "pixel-perfect-container";
+				node.innerHTML =
+'	<link rel="stylesheet" type="text/css" href="http://dsheiko.github.io/pixel-perfect-bookmarklet/style.css">' +
+'		<div class="pixel-perfect-panel" draggable="true">'' +
+'		<div>' +
+'			<a class="pixel-perfect-panel-close">Close</a>' +
+'			<div class="pixel-perfect-panel-main">' +
+'				<div>Overlay: <button class="pixel-perfect-overlay-btn">Off</button></div>' +
+'				<div>Settings: <button class="pixel-perfect-settings-btn">Show</button></div>' +
+'				<form class="pixel-perfect-panel-settings pixel-perfect-hidden">' +
+'					<fieldset>' +
+'						<label>image:</label><input type="file" name="image" class="pixel-perfect-overlay-image" multiple accept="image/*" />' +
+'					</fieldset>' +
+'					<fieldset>' +
+'						<label>top (px):</label><input type="number"  step="1" name="top" class="pixel-perfect-overlay-top" />' +
+'					</fieldset>' +
+'					<fieldset>' +
+'						<label>left (px):</label><input type="number"  step="1" name="left" class="pixel-perfect-overlay-left" />' +
+'					</fieldset>' +
+'					<fieldset>' +
+'						<label>opacity:</label><input type="range" min="0" max="1" step="0.05" name="opacity" class="pixel-perfect-overlay-opacity" />' +
+'					</fieldset>' +
+'				</form>' +
+'			</div>' +
+'			<div class="pixel-perfect-panel-footer" draggable="true">' +
+'				<a href="http://dsheiko.github.io/pixel-perfect-bookmarklet/">Pixel Perfect Bookmarklet</a>' +
+'			</div>' +
+'		</div>' +
+'	</div>' +
+'	<img class="pixel-perfect-overlay" />';
+				document.body.appendChild( node );
+				doneCb( node );
 			},
 
 			/**
