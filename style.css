@@ -1,0 +1,128 @@
+	#pixel-perfect-container .pixel-perfect-switch {
+		position: fixed;
+		z-index: 9999;
+		right: 30px;
+		top: 30px;
+		opacity: 0.8;
+		font-size: 20px;
+		font-weight: bold;
+		cursor: pointer;
+	}
+	#pixel-perfect-container .pixel-perfect-overlay {
+		position: absolute;
+		display: block;
+		top: 0;
+		left: 0;
+		z-index: 9000;
+		opacity: 0.8;
+	}
+
+
+	#pixel-perfect-container {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		font-family: Arial;
+		font-size: 12px;
+		color: white;
+		z-index: 9001;
+	}
+
+	.pixel-perfect-hidden {
+		display: none !important;
+	}
+
+	#pixel-perfect-container .pixel-perfect-panel {
+		position: absolute;
+		top: 5px;
+		right: 5px;
+		width: 200px;
+		z-index: 9002;
+		border: 3px solid #333;
+		-webkit-border-radius: 5px;
+		 -moz-border-radius: 5px;
+			-ms-border-radius: 5px;
+			 -o-border-radius: 5px;
+					border-radius: 5px;
+	}
+	#pixel-perfect-container .pixel-perfect-panel > div {
+		position: relative;
+	}
+	#pixel-perfect-container .pixel-perfect-panel-footer {
+		background-color: #333;
+		padding: 12px 5px;
+		cursor: move;
+	}
+	#pixel-perfect-container .pixel-perfect-panel-footer a,
+	#pixel-perfect-container .pixel-perfect-panel-footer a:hover,
+	#pixel-perfect-container .pixel-perfect-panel-footer a:link,
+	#pixel-perfect-container .pixel-perfect-panel-footer a:focus,
+	#pixel-perfect-container .pixel-perfect-panel-footer a:active {
+		color: white;
+		text-decoration: none;
+	}
+	#pixel-perfect-container .pixel-perfect-panel-main {
+		background-color: white;
+		color: #333;
+		padding: 6px 5px;
+		z-index: 9003;
+	}
+	#pixel-perfect-container .pixel-perfect-panel-main > div {
+		padding: 6px 0;
+	}
+	#pixel-perfect-container .pixel-perfect-panel-close {
+		position: absolute;
+		top: 0;
+		right: 0;
+		background-color: #333;
+		padding: 3px 5px;
+		border-radius: 0 0 0 5px;
+		cursor: pointer;
+		outline: 0;
+		color: white;
+	}
+	#pixel-perfect-container .pixel-perfect-panel-settings {
+		outline: 0;
+		border: 0;
+		padding: 6px 0;
+	}
+	#pixel-perfect-container .pixel-perfect-panel-settings fieldset {
+		border: 0;
+    margin: 0;
+    padding: 2px 0;
+	}
+	#pixel-perfect-container .pixel-perfect-panel-settings label {
+		display: inline-block;
+    margin: 0;
+    padding: 0;
+		width: 50px;
+	}
+	#pixel-perfect-container .pixel-perfect-panel-settings input {
+		display: inline-block;
+    padding: 0;
+		width: 130px;
+		font-size: 100%;
+    margin: 0;
+    vertical-align: baseline;
+    *vertical-align: middle;
+		border: 1px solid #333;
+		border-radius: 5px;
+		outline: none;
+		padding: 0px 5px;
+		box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		font-family: Arial;
+		font-size: 12px;
+		color: #333;
+	}
+
+	[draggable] {
+		-moz-user-select: none;
+		-khtml-user-select: none;
+		-webkit-user-select: none;
+		user-select: none;
+		/* Required to make elements draggable in old WebKit */
+		-khtml-user-drag: element;
+		-webkit-user-drag: element;
+	}
