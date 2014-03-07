@@ -38,21 +38,39 @@
 			 * @returns {void}
 			 */
 			loadHtml = function( doneCb ){
-		    var oReq = new window.XMLHttpRequest();
-        oReq.onload = function() {
-					var node;
-          if ( this.readyState !== 4 || this.status !== 200 ) {
-            alert( "PixelPerfectBookmarklet: cannot read markup.html" );
-          }
-					node = document.createElement( "div" );
-					node.id = "pixel-perfect-container";
-					node.innerHTML = this.responseText;
-					document.body.appendChild( node );
-          doneCb( node );
-        };
-        oReq.open( "GET", "http://dsheiko.github.io/pixel-perfect-bookmarklet/markup.html", true );
-        oReq.setRequestHeader( "Content-Type", "application/x-www-form-urlencoded" );
-        oReq.send( null );
+				var node = document.createElement( "div" );
+				node.id = "pixel-perfect-container";
+				node.innerHTML = '' +
+'	<link rel="stylesheet" type="text/css" href="https://dsheiko.github.io/pixel-perfect-bookmarklet/style.css">' +
+'		<div class="pixel-perfect-panel" draggable="true">' +
+'		<div>' +
+'			<a class="pixel-perfect-panel-close">Close</a>' +
+'			<div class="pixel-perfect-panel-main">' +
+'				<div>Overlay: <button class="pixel-perfect-overlay-btn">Off</button></div>' +
+'				<div>Settings: <button class="pixel-perfect-settings-btn">Show</button></div>' +
+'				<form class="pixel-perfect-panel-settings pixel-perfect-hidden">' +
+'					<fieldset>' +
+'						<label>image:</label><input type="file" name="image" class="pixel-perfect-overlay-image" multiple accept="image/*" />' +
+'					</fieldset>' +
+'					<fieldset>' +
+'						<label>top (px):</label><input type="number"  step="1" name="top" class="pixel-perfect-overlay-top" />' +
+'					</fieldset>' +
+'					<fieldset>' +
+'						<label>left (px):</label><input type="number"  step="1" name="left" class="pixel-perfect-overlay-left" />' +
+'					</fieldset>' +
+'					<fieldset>' +
+'						<label>opacity:</label><input type="range" min="0" max="1" step="0.05" name="opacity" class="pixel-perfect-overlay-opacity" />' +
+'					</fieldset>' +
+'				</form>' +
+'			</div>' +
+'			<div class="pixel-perfect-panel-footer" draggable="true">' +
+'				<a href="https://dsheiko.github.io/pixel-perfect-bookmarklet/">Pixel Perfect Bookmarklet</a>' +
+'			</div>' +
+'		</div>' +
+'	</div>' +
+'	<img class="pixel-perfect-overlay"  draggable="true" />';
+				document.body.appendChild( node );
+				doneCb( node );
 			},
 
 			/**
@@ -135,6 +153,88 @@
 					}
 				};
 			},
+
+			/**
+			 * @class
+			 * @param {Node} overlay
+			 * @param {object} overlaySettings
+			 */
+			DragAndDropOverlay = function( overlay, overlaySettings ) {
+				/**
+				 * @type {object}
+				 * @property {number} top
+				 * @property {number} left
+				 */
+				var transferObjOnStartState = {
+								top: 0,
+								left: 0
+						};
+				return {
+					/**
+					 * @constructs
+					 */
+					init: function() {
+						this.bindUi();
+					},
+					/**
+					 * Register listeners
+					 */
+					bindUi: function() {
+						overlay.addEventListener( "dragstart", this.handleDragStart, false );
+						overlay.addEventListener( "dragover", this.handleDragOver, false );
+						overlay.addEventListener( "drop", this.handleDrop, false );
+						overlay.addEventListener( "dragend", this.handlerDragEnd, false );
+					},
+					/**
+					 * @param {Event} e
+					 */
+					handleDragStart: function( e ){
+						var style = window.getComputedStyle( overlay );
+						transferObjOnStartState = {
+							top: e.screenY - style.top.replace( "px", "" ),
+							left: e.screenX - style.left.replace( "px", "" )
+						};
+						e.dataTransfer.effectAllowed = "move";
+						e.dataTransfer.setData( "text/html", overlay.innerHTML );
+					},
+					/**
+					 * @param {Event} e
+					 */
+					handleDragOver: function( e ) {
+						if ( e.preventDefault ) {
+							e.preventDefault();
+						}
+						e.dataTransfer.dropEffect = "move";
+					},
+					/**
+					 * @param {Event} e
+					 */
+					handleDrop: function( e ){
+						if ( e.stopPropagation ) {
+							e.stopPropagation();
+						}
+						return false;
+					},
+					/**
+					 * @param {Event} e
+					 */
+					handlerDragEnd: function( e ){
+						var left = e.screenX - transferObjOnStartState.left,
+								top = e.screenY - transferObjOnStartState.top;
+
+						left = left > 0 ? left : 0;
+						top = top > 0 ? top : 0;
+
+						storage.set( "left", left );
+						storage.set( "top", top );
+						overlaySettings.left.value = left;
+						overlaySettings.top.value = top;
+						overlay.style.left = left;
+						overlay.style.top = top;
+					}
+				};
+			},
+
 			/**
 			 * @class
 			 * @param {Node} container
@@ -185,7 +285,9 @@
 					init: function() {
 						this.bindUi();
 						this.syncUi();
+						( new DragAndDropOverlay( overlay, overlaySettings ) ).init();
 					},
+
 					/**
 					 * Sync UI state
 					 */
