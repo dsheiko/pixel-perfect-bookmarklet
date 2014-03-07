@@ -193,6 +193,7 @@
 						// Fill out the form
 						Object.keys( overlaySettings ).forEach(function( key ){
 							overlaySettings[ key ].value = storage.get( key ) || settings[ key ];
+							storage.set( key, overlaySettings[ key ].value );
 						});
 						// Update overlay style
 						this.updateOverlay();
