@@ -50,7 +50,7 @@
 					document.body.appendChild( node );
           doneCb( node );
         };
-        oReq.open( "GET", "markup.html", true );
+        oReq.open( "GET", "http://dsheiko.github.io/pixel-perfect-bookmarklet/markup.html", true );
         oReq.setRequestHeader( "Content-Type", "application/x-www-form-urlencoded" );
         oReq.send( null );
 			},
