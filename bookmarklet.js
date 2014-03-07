@@ -225,7 +225,6 @@
 						left = left > 0 ? left : 0;
 						top = top > 0 ? top : 0;
 
-console.log(left, top);
 						main.updateOverlayPositionInForm( left, top );
 						main.syncUi();
 					}
@@ -290,6 +289,7 @@ console.log(left, top);
 					 * @param {number} top
 					 */
 					updateOverlayPositionInForm: function( left, top ){
+						console.info(left, top );
 						overlaySettings.left.value = left;
 						overlaySettings.top.value = top;
 					},
