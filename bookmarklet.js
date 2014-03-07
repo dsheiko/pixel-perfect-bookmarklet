@@ -157,9 +157,9 @@
 			/**
 			 * @class
 			 * @param {Node} overlay
-			 * @param {Main} main
+			 * @param {object} overlaySettings
 			 */
-			DragAndDropOverlay = function( overlay, main ) {
+			DragAndDropOverlay = function( overlay, overlaySettings ) {
 				/**
 				 * @type {object}
 				 * @property {number} top
@@ -225,8 +225,12 @@
 						left = left > 0 ? left : 0;
 						top = top > 0 ? top : 0;
 
-						main.updateOverlayPositionInForm( left, top );
-						main.syncUi();
+						storage.set( "left", left );
+						storage.set( "top", top );
+						overlaySettings.left.value = left;
+						overlaySettings.top.value = top;
+						overlay.style.left = left;
+						overlay.style.top = top;
 					}
 				};
 			},
@@ -281,18 +285,9 @@
 					init: function() {
 						this.bindUi();
 						this.syncUi();
-						( new DragAndDropOverlay( overlay, this ) ).init();
+						( new DragAndDropOverlay( overlay, overlaySettings ) ).init();
 					},
-					/**
-					 *
-					 * @param {number} left
-					 * @param {number} top
-					 */
-					updateOverlayPositionInForm: function( left, top ){
-						console.info(left, top );
-						overlaySettings.left.value = left;
-						overlaySettings.top.value = top;
-					},
+
 					/**
 					 * Sync UI state
 					 */
