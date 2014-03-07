@@ -1,0 +1,304 @@
+/**
+ * jscs standard:Jquery
+ */
+(function(){
+			/**
+			 * @module
+			 */
+	var storage = (function(){
+				/**
+				 * @constant
+				 */
+				var PREF = "pixelPerfect_";
+				return {
+					/**
+					 * @param {string} key
+					 * @returns {*}
+					 */
+					get: function( key ) {
+						return window.localStorage.getItem( PREF + key );
+					},
+					/**
+					 * @param {string} key
+					 * @param {*} val
+					 */
+					set: function( key, val ) {
+						window.localStorage.setItem( PREF + key, val );
+					}
+				};
+			}()),
+			/**
+			 * @callback doneCb
+			 * @param {Node} container
+			 */
+
+			/**
+			 * Load widget markup
+			 * @param {doneCb} doneCb
+			 * @returns {void}
+			 */
+			loadHtml = function( doneCb ){
+		    var oReq = new window.XMLHttpRequest();
+        oReq.onload = function() {
+					var node;
+          if ( this.readyState !== 4 || this.status !== 200 ) {
+            alert( "PixelPerfectBookmarklet: cannot read markup.html" );
+          }
+					node = document.createElement( "div" );
+					node.id = "pixel-perfect-container";
+					node.innerHTML = this.responseText;
+					document.body.appendChild( node );
+          doneCb( node );
+        };
+        oReq.open( "GET", "markup.html", true );
+        oReq.setRequestHeader( "Content-Type", "application/x-www-form-urlencoded" );
+        oReq.send( null );
+			},
+
+			/**
+			 * @class
+			 * @param {Node} container
+			 */
+			DragAndDrop = function( container ) {
+				/**
+				 * @type {object}
+				 * @property {number} top
+				 * @property {number} left
+				 */
+				var transferObjOnStartState = {
+								top: 0,
+								left: 0
+						},
+						/**
+						 * @type {Node}
+						 */
+						panel = container.querySelector( ".pixel-perfect-panel" ),
+						footer = container.querySelector( ".pixel-perfect-panel-footer" );
+				return {
+					/**
+					 * @constructs
+					 */
+					init: function() {
+						this.bindUi();
+					},
+					/**
+					 * Register listeners
+					 */
+					bindUi: function() {
+						footer.addEventListener( "dragstart", this.handleDragStart, false );
+						footer.addEventListener( "dragover", this.handleDragOver, false );
+						footer.addEventListener( "drop", this.handleDrop, false );
+						footer.addEventListener( "dragend", this.handlerDragEnd, false );
+					},
+					/**
+					 * @param {Event} e
+					 */
+					handleDragStart: function( e ){
+						var style = window.getComputedStyle( panel );
+						transferObjOnStartState = {
+							top: e.screenY - style.top.replace( "px", "" ),
+							left: e.screenX - style.left.replace( "px", "" )
+						};
+						panel.style.opacity = "0.5";
+						e.dataTransfer.effectAllowed = "move";
+						e.dataTransfer.setData( "text/html", panel.innerHTML );
+					},
+					/**
+					 * @param {Event} e
+					 */
+					handleDragOver: function( e ) {
+						if ( e.preventDefault ) {
+							e.preventDefault();
+						}
+						e.dataTransfer.dropEffect = "move";
+					},
+					/**
+					 * @param {Event} e
+					 */
+					handleDrop: function( e ){
+						if ( e.stopPropagation ) {
+							e.stopPropagation();
+						}
+						return false;
+					},
+					/**
+					 * @param {Event} e
+					 */
+					handlerDragEnd: function( e ){
+						var left = e.screenX - transferObjOnStartState.left,
+								top = e.screenY - transferObjOnStartState.top;
+						panel.style.opacity = "1";
+						left = left > 0 ? ( left < window.innerWidth - 200 ? left : window.innerWidth - 200 ) : 0;
+						top = top > 0 ? ( top < window.innerHeight - 240 ? top : window.innerHeight - 240 ) : 0;
+						panel.style.left = left;
+						panel.style.top = top;
+					}
+				};
+			},
+			/**
+			 * @class
+			 * @param {Node} container
+			 */
+			Main = function( container ) {
+						/** @type {Node} */
+				var overlayBtn = container.querySelector( ".pixel-perfect-overlay-btn" ),
+						/** @type {Node} */
+						settingsBtn = container.querySelector( ".pixel-perfect-settings-btn" ),
+						/** @type {Node} */
+						overlay = container.querySelector( ".pixel-perfect-overlay" ),
+						/** @type {Node} */
+						settingsPanel = container.querySelector( ".pixel-perfect-panel-settings" ),
+						/** @type {Node} */
+						closePanelBtn = container.querySelector( ".pixel-perfect-panel-close" ),
+						/**
+						 * @type {object}
+						 * @property {Node} image
+						 * @property {Node} top
+						 * @property {Node} left
+						 * @property {Node} opacity
+						 */
+						overlaySettings = {
+							top: container.querySelector( ".pixel-perfect-overlay-top" ),
+							left: container.querySelector( ".pixel-perfect-overlay-left" ),
+							opacity: container.querySelector( ".pixel-perfect-overlay-opacity" )
+						},
+						/** @type {Node} */
+						image = container.querySelector( ".pixel-perfect-overlay-image" ),
+						/**
+						 * @type {object}
+						 * @property {Node} image
+						 * @property {Node} top
+						 * @property {Node} left
+						 * @property {Node} opacity
+						 */
+						settings = {
+							image: "",
+							top: "0",
+							left: "0",
+							opacity: "0.8"
+						};
+
+				return {
+					/**
+					 * @constructs
+					 */
+					init: function() {
+						this.bindUi();
+						this.syncUi();
+					},
+					/**
+					 * Sync UI state
+					 */
+					syncUi: function() {
+						// Fill out the form
+						Object.keys( overlaySettings ).forEach(function( key ){
+							overlaySettings[ key ].value = storage.get( key ) || settings[ key ];
+						});
+						// Update overlay style
+						this.updateOverlay();
+					},
+					/**
+					 * Register listeners
+					 */
+					bindUi: function() {
+						var that = this,
+								/**
+								 * Proxy
+								 * @param {Event} e
+								 */
+								handleInputChange = function( e ) {
+									that.handleInputChange( e );
+								};
+
+						overlayBtn.addEventListener( "click", function( e ){
+							e.preventDefault();
+							that.toggleOverlay();
+						}, false );
+						settingsBtn.addEventListener( "click", function( e ){
+							e.preventDefault();
+							that.toggleSettings();
+						}, false );
+
+						closePanelBtn.addEventListener( "click", function( e ){
+							e.preventDefault();
+							container.parentNode.removeChild( container );
+						}, false );
+
+						Object.keys( overlaySettings ).forEach(function( key ){
+							overlaySettings[ key ].addEventListener( "change", handleInputChange, false );
+							overlaySettings[ key ].addEventListener( "input", handleInputChange, false );
+						});
+						image.addEventListener( "change", function(){
+							that.handleImageInputChange( this.files );
+						}, false );
+					},
+					/**
+					 * Update styles of overlay node from form input values
+					 */
+					updateOverlay: function() {
+						var re = /[^\d-]/;
+						try {
+							overlay.style.top = storage.get( "top" ).replace( re, "" ) + "px";
+							overlay.style.left = storage.get( "left" ).replace( re, "" ) + "px";
+							overlay.style.opacity = storage.get( "opacity" );
+							overlay.src = storage.get( "image" );
+						} catch( e ) {
+							// keep silentce
+						}
+					},
+					/**
+					 * Handle event when an image file input changed
+					 * @param {File[]} files
+					 */
+					handleImageInputChange: function( files ){
+						var that = this,
+								reader = new FileReader();
+						if ( files.length ) {
+							reader.onload = function( e ){
+								storage.set( "image", e.target.result );
+								that.updateOverlay();
+							};
+							reader.readAsDataURL( files[ 0 ] );
+						}
+					},
+					/**
+					 * Handle event when an input changed
+					 * @param {type} e
+					 */
+					handleInputChange: function( e ){
+						storage.set( e.target.name, e.target.value );
+						this.updateOverlay();
+					},
+					/**
+					 * Toggle overlay state
+					 */
+					toggleOverlay: function(){
+						if ( overlayBtn.innerHTML === "On" ) {
+							overlayBtn.innerHTML = "Off";
+							overlay.classList.remove( "pixel-perfect-hidden" );
+						} else {
+							overlayBtn.innerHTML = "On";
+							overlay.classList.add( "pixel-perfect-hidden" );
+						}
+					},
+					/**
+					 * Toggle settigs panel state
+					 */
+					toggleSettings: function(){
+						if ( settingsBtn.innerHTML === "Show" ) {
+							settingsBtn.innerHTML = "Hide";
+							settingsPanel.classList.remove( "pixel-perfect-hidden" );
+						} else {
+							settingsBtn.innerHTML = "Show";
+							settingsPanel.classList.add( "pixel-perfect-hidden" );
+						}
+					}
+				};
+			};
+
+	loadHtml(function( container ){
+		( new Main( container ) ).init();
+		( new DragAndDrop( container ) ).init();
+	});
+
+}());

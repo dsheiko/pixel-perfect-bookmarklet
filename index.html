@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pixel Perfect Bookmarklet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<style>
+			a, a:hover {
+				text-decoration: none;
+			}
+			.brand {
+				display: block;
+				padding: 10px 0;
+				font-size: 20px;
+				font-weight: 200;
+				color: #777777;
+			}
+			.project {
+				display: block;
+				text-align: right;
+				color: white;
+				position: absolute;
+				top: 14px;
+				right: 0;
+				font-weight: bold;
+			}
+			a.project:hover, a.project:link, a.project:active, a.project:visited {
+				color: white;
+			}
+			.navbar-inner .container {
+				position: relative;
+			}
+			.footer {
+				margin-top: 32px;
+				border-top: 1px solid #aaa;
+				padding-top: 14px;
+				padding-bottom: 14px;
+			}
+			kbd {
+					background-color: #EEEEEE;
+					border: 1px solid #CCCCCC;
+					border-radius: 5px;
+					box-shadow: 1px 2px 2px #DDDDDD;
+					display: inline-block;
+					font: 20px Arial;
+					padding: 3px 7px;
+			}
+		</style>
+  </head>
+  <body>
+
+		 <div class="navbar navbar-inverse">
+      <div class="navbar-inner">
+        <div class="container">
+					<span class="brand">Pixel Perfect Bookmarklet</span>
+					<a class="project" href="#contact">Fork me on GitHub</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <h1>Pixel Perfect Bookmarklet</h1>
+      <p>This bookmarklet provides a controllable overlay with an image of page graphical design over top of the developed HTML.
+				In fact it is similar to the well-know Pixel Perfect Firefox extension, which doesn't work properly with last
+				Firefox builds for a while.</p>
+			<p>
+				To make use of the tool simply drag the link <kbd><a href="javascript:(function(){var s = document.createElement('script');s.type='text/javascript';s.src='http://dsheiko.github.io/pixel-perfect-bookmarklet/bookmarklet.js?v='+parseInt(Math.random()*99999999);document.body.appendChild(s);void(0);}());">PixelPerfect</a></kbd>
+				to your Bookmarks Toolbar
+			</p>
+			<figure>
+				<figcaption>Sample:</figcaption>
+				<img src="./sample.jpg" alt="sample">
+			</figure>
+
+			<div class="footer">
+				Pixel Perfect Bookmarklet is created and mantained by <a href="http://dsheiko.com">Dmitry Sheiko</a>.
+			</div>
+
+    </div> <!-- /container -->
+
+
+
+  </body>
+
+</html>
+
+
+
