@@ -38,7 +38,7 @@
 			 * @returns {void}
 			 */
 			loadHtml = function( doneCb ){
-				node = document.createElement( "div" );
+				var node = document.createElement( "div" );
 				node.id = "pixel-perfect-container";
 				node.innerHTML = '' +
 '	<link rel="stylesheet" type="text/css" href="https://dsheiko.github.io/pixel-perfect-bookmarklet/style.css">' +
@@ -68,7 +68,7 @@
 '			</div>' +
 '		</div>' +
 '	</div>' +
-'	<img class="pixel-perfect-overlay" />';
+'	<img class="pixel-perfect-overlay"  draggable="true" />';
 				document.body.appendChild( node );
 				doneCb( node );
 			},
@@ -153,6 +153,84 @@
 					}
 				};
 			},
+
+			/**
+			 * @class
+			 * @param {Node} overlay
+			 * @param {Main} main
+			 */
+			DragAndDropOverlay = function( overlay, main ) {
+				/**
+				 * @type {object}
+				 * @property {number} top
+				 * @property {number} left
+				 */
+				var transferObjOnStartState = {
+								top: 0,
+								left: 0
+						};
+				return {
+					/**
+					 * @constructs
+					 */
+					init: function() {
+						this.bindUi();
+					},
+					/**
+					 * Register listeners
+					 */
+					bindUi: function() {
+						overlay.addEventListener( "dragstart", this.handleDragStart, false );
+						overlay.addEventListener( "dragover", this.handleDragOver, false );
+						overlay.addEventListener( "drop", this.handleDrop, false );
+						overlay.addEventListener( "dragend", this.handlerDragEnd, false );
+					},
+					/**
+					 * @param {Event} e
+					 */
+					handleDragStart: function( e ){
+						var style = window.getComputedStyle( overlay );
+						transferObjOnStartState = {
+							top: e.screenY - style.top.replace( "px", "" ),
+							left: e.screenX - style.left.replace( "px", "" )
+						};
+						e.dataTransfer.effectAllowed = "move";
+						e.dataTransfer.setData( "text/html", overlay.innerHTML );
+					},
+					/**
+					 * @param {Event} e
+					 */
+					handleDragOver: function( e ) {
+						if ( e.preventDefault ) {
+							e.preventDefault();
+						}
+						e.dataTransfer.dropEffect = "move";
+					},
+					/**
+					 * @param {Event} e
+					 */
+					handleDrop: function( e ){
+						if ( e.stopPropagation ) {
+							e.stopPropagation();
+						}
+						return false;
+					},
+					/**
+					 * @param {Event} e
+					 */
+					handlerDragEnd: function( e ){
+						var left = e.screenX - transferObjOnStartState.left,
+								top = e.screenY - transferObjOnStartState.top;
+
+						left = left > 0 ? ( left < window.innerWidth - 200 ? left : window.innerWidth - 200 ) : 0;
+						top = top > 0 ? ( top < window.innerHeight - 240 ? top : window.innerHeight - 240 ) : 0;
+
+						main.updateOverlayPositionInForm( left, top );
+						main.syncUi();
+					}
+				};
+			},
+
 			/**
 			 * @class
 			 * @param {Node} container
@@ -203,6 +281,16 @@
 					init: function() {
 						this.bindUi();
 						this.syncUi();
+						( new DragAndDropOverlay( overlay, this ) ).init();
+					},
+					/**
+					 *
+					 * @param {number} left
+					 * @param {number} top
+					 */
+					updateOverlayPositionInForm: function( left, top ){
+						overlaySettings.left.value = left;
+						overlaySettings.top.value = top;
 					},
 					/**
 					 * Sync UI state
