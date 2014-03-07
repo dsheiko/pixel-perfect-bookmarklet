@@ -40,9 +40,9 @@
 			loadHtml = function( doneCb ){
 				node = document.createElement( "div" );
 				node.id = "pixel-perfect-container";
-				node.innerHTML =
+				node.innerHTML = '' +
 '	<link rel="stylesheet" type="text/css" href="http://dsheiko.github.io/pixel-perfect-bookmarklet/style.css">' +
-'		<div class="pixel-perfect-panel" draggable="true">'' +
+'		<div class="pixel-perfect-panel" draggable="true">' +
 '		<div>' +
 '			<a class="pixel-perfect-panel-close">Close</a>' +
 '			<div class="pixel-perfect-panel-main">' +
