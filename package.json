@@ -1,7 +1,7 @@
 {
   "name": "pixel-perfect-bookmarklet",
   "description": "This bookmarklet provides a controllable overlay with an image of page graphical design over top of the developed HTML",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "homepage": "http://dsheiko.github.io/pixel-perfect-bookmarklet",
   "author": {
     "name": "Dmitry Sheiko",
