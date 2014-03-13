@@ -229,8 +229,8 @@
 						storage.set( "top", top );
 						overlaySettings.left.value = left;
 						overlaySettings.top.value = top;
-						overlay.style.left = left;
-						overlay.style.top = top;
+						overlay.style.left = left + "px";
+						overlay.style.top = top + "px";
 					}
 				};
 			},
