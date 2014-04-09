@@ -389,6 +389,7 @@
 						if ( window.parseInt( e.target.value, 10 ) < 0 ) {
 							e.target.value = "0";
 						}
+						handleInputChange( e );
 					},
 					/**
 					 * Handle event when an image file input changed
