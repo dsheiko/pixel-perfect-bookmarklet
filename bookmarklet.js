@@ -324,6 +324,13 @@
 								 */
 								handleInputChange = function( e ) {
 									that.handleInputChange( e );
+								},
+								/**
+								 * Proxy
+								 * @param {Event} e
+								 */
+								handleInputKeyUp = function( e ) {
+									that.handleInputKeyUp( e );
 								};
 
 						overlayBtn.addEventListener( "click", function( e ){
@@ -345,8 +352,8 @@
 							overlaySettings[ key ].addEventListener( "input", handleInputChange, false );
 						});
 
-						overlaySettings[ "top" ].addEventListener( "keyup", this.handleInputKeyUp, false );
-						overlaySettings[ "left" ].addEventListener( "keyup", this.handleInputKeyUp, false );
+						overlaySettings[ "top" ].addEventListener( "keyup", handleInputKeyUp, false );
+						overlaySettings[ "left" ].addEventListener( "keyup", handleInputKeyUp, false );
 
 						image.addEventListener( "change", function(){
 							that.handleImageInputChange( this.files );
@@ -389,6 +396,7 @@
 						if ( window.parseInt( e.target.value, 10 ) < 0 ) {
 							e.target.value = "0";
 						}
+						this.handleInputChange( e );
 					},
 					/**
 					 * Handle event when an image file input changed
