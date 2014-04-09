@@ -28,6 +28,18 @@
 				};
 			}()),
 			/**
+			 * @constant
+			 * @default
+			 * @type {number{
+			 */
+			KEYCODE_UP = 38,
+			/**
+			 * @constant
+			 * @default
+			 * @type {number{
+			 */
+			KEYCODE_DOWN = 40,
+			/**
 			 * @callback doneCb
 			 * @param {Node} container
 			 */
@@ -53,11 +65,12 @@
 '						<label>image:</label><input type="file" name="image" class="pixel-perfect-overlay-image" multiple accept="image/*" />' +
 '					</fieldset>' +
 '					<fieldset>' +
-'						<label>top (px):</label><input type="number"  step="1" name="top" class="pixel-perfect-overlay-top" />' +
+'						<label>top (px):</label><input type="text" name="top" class="pixel-perfect-overlay-top" />' +
 '					</fieldset>' +
 '					<fieldset>' +
-'						<label>left (px):</label><input type="number"  step="1" name="left" class="pixel-perfect-overlay-left" />' +
+'						<label>left (px):</label><input type="text" name="left" class="pixel-perfect-overlay-left" />' +
 '					</fieldset>' +
+'					<p>Use arrow keys `up` and `down` with or without `Shift`</p>' +
 '					<fieldset>' +
 '						<label>opacity:</label><input type="range" min="0" max="1" step="0.05" name="opacity" class="pixel-perfect-overlay-opacity" />' +
 '					</fieldset>' +
@@ -331,6 +344,10 @@
 							overlaySettings[ key ].addEventListener( "change", handleInputChange, false );
 							overlaySettings[ key ].addEventListener( "input", handleInputChange, false );
 						});
+
+						overlaySettings[ "top" ].addEventListener( "keyup", this.handleInputKeyUp, false );
+						overlaySettings[ "left" ].addEventListener( "keyup", this.handleInputKeyUp, false );
+
 						image.addEventListener( "change", function(){
 							that.handleImageInputChange( this.files );
 						}, false );
@@ -347,6 +364,30 @@
 							overlay.src = storage.get( "image" );
 						} catch( e ) {
 							// keep silentce
+						}
+					},
+					/**
+					 * Handle keyup event
+					 * @param {Event} e
+					 */
+					handleInputKeyUp: function( e ){
+						e.stopPropagation();
+						e.preventDefault();
+
+						if ( e.keyCode === KEYCODE_UP && !e.shiftKey ) {
+							e.target.value = window.parseInt( e.target.value, 10 ) + 1;
+						}
+						if ( e.keyCode === KEYCODE_UP && e.shiftKey ) {
+							e.target.value = window.parseInt( e.target.value, 10 ) + 10;
+						}
+						if ( e.keyCode === KEYCODE_DOWN && !e.shiftKey ) {
+							e.target.value = window.parseInt( e.target.value, 10 ) - 1;
+						}
+						if ( e.keyCode === KEYCODE_DOWN && e.shiftKey ) {
+							e.target.value = window.parseInt( e.target.value, 10 ) - 10;
+						}
+						if ( window.parseInt( e.target.value, 10 ) < 0 ) {
+							e.target.value = "0";
 						}
 					},
 					/**
