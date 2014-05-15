@@ -35,7 +35,7 @@
 	}
 
 	#pixel-perfect-container .pixel-perfect-panel {
-		position: absolute;
+		position: fixed;
 		top: 5px;
 		right: 5px;
 		width: 200px;
