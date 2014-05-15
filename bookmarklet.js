@@ -393,9 +393,10 @@
 						if ( e.keyCode === KEYCODE_DOWN && e.shiftKey ) {
 							e.target.value = window.parseInt( e.target.value, 10 ) - 10;
 						}
-						if ( window.parseInt( e.target.value, 10 ) < 0 ) {
-							e.target.value = "0";
-						}
+//          With this constraint negative shift is not possible at all
+//						if ( window.parseInt( e.target.value, 10 ) < 0 ) {
+//							e.target.value = "0";
+//						}
 						this.handleInputChange( e );
 					},
 					/**
